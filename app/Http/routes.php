@@ -10,29 +10,32 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+$domain = Config::get('constants.DOMAIN');
 
-Route::group(['domain' => '{account}.laravelapi.com','middleware'=>['domain.routes','api']], function($account) {
+Route::group(['domain' => '{account}.'.$domain,'middleware'=>['domain.routes','api']], function($account) {
 	
-	Route::get('/', function ($account) {
-		return $account; 
+	//Route::get('/', function ($account) {
+	//	return $account; 
+	//});
+	
+	Route::get('/', function(){
+		return redirect('/home');
 	});
 	
-	Route::get('/posts', function () {
-		$token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdFwvbGFyYXZlbGFwaVwvcHVibGljXC9hcGlcL3YxXC9hdXRoZW50aWNhdGUiLCJpYXQiOjE0NTUxMTI0NzMsImV4cCI6MTQ1NTExNjA3MywibmJmIjoxNDU1MTEyNDczLCJqdGkiOiJhNTU1YTQ1NGM4NDdiNzE2ZTFkOGFmYTkxYjc1ZmY3YSJ9.o1qJIL_Op5yC9oqVZsVodAf1udPBbxloQlOG8jMzxHU';
-		$request = Request::create('api/v1/posts', 'GET',['token'=>$token]);
+	Route::get('/posts', function ($account) {
+		
+		$token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJkb21haW4iOiJwdW5lLmxhcmF2ZWxhcGkuY29tIiwic3ViIjoxLCJpc3MiOiJodHRwOlwvXC9wdW5lLmxhcmF2ZWxhcGkuY29tXC9hcGlcL3YxXC9hdXRoZW50aWNhdGUiLCJpYXQiOjE0NTUxOTY3ODcsImV4cCI6MTQ1NTIwMDM4NywibmJmIjoxNDU1MTk2Nzg3LCJqdGkiOiJkNTk2ZTBlNjZjMDEwYTI0MWMyOWI5ZWE0ODY1M2RmNCJ9.q90We6ethCBFzuw-xGnRm8MCy73sQ0gZUhRNXQVC7ZE';
+		$request = Request::create(Request::root().'/api/v1/posts', 'GET',['token'=>$token]);
 		$response = Route::dispatch($request)->getData();
-	   
 		$result =  json_decode(json_encode($response),true);
 		echo '<pre>';
 		print_r($result);
-		////echo json_last_error();
-		//
 		//return $result;
 	});
 
 });
 
-Route::group(['prefix' => 'api/v1', 'domain' => '{account}.laravelapi.com','middleware'=>['domain.routes','api','cors','api.jwt']], function($account) {
+Route::group(['prefix' => 'api/v1', 'domain' => '{account}.'.$domain,'middleware'=>['domain.routes','api','cors','api.jwt']], function($account) {
 
 	Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]);
     Route::post('authenticate', 'AuthenticateController@authenticate');
@@ -42,13 +45,6 @@ Route::group(['prefix' => 'api/v1', 'domain' => '{account}.laravelapi.com','midd
     // Api calls
     
     Route::resource('posts', 'Api\V1\postsController');
-});
-
-
-
-
-Route::get('/', function () {
-    return view('welcome');
 });
 
 /*
