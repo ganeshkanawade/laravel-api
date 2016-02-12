@@ -14,13 +14,13 @@ $domain = Config::get('constants.DOMAIN');
 
 Route::group(['domain' => '{account}.'.$domain,'middleware'=>['domain.routes','api']], function($account) {
 	
-	//Route::get('/', function ($account) {
-	//	return $account; 
-	//});
-	
-	Route::get('/', function(){
-		return redirect('/home');
+	Route::get('/', function ($account) {
+		return $account; 
 	});
+	
+	//Route::get('/', function(){
+	//	return redirect('/home');
+	//});
 	
 	Route::get('/posts', function ($account) {
 		
@@ -31,8 +31,7 @@ Route::group(['domain' => '{account}.'.$domain,'middleware'=>['domain.routes','a
 		echo '<pre>';
 		print_r($result);
 		//return $result;
-	});
-
+	});	
 });
 
 Route::group(['prefix' => 'api/v1', 'domain' => '{account}.'.$domain,'middleware'=>['domain.routes','api','cors','api.jwt']], function($account) {
@@ -45,6 +44,12 @@ Route::group(['prefix' => 'api/v1', 'domain' => '{account}.'.$domain,'middleware
     // Api calls
     
     Route::resource('posts', 'Api\V1\postsController');
+});
+
+
+Route::group(['prefix' => 'super','middleware'=>'super'], function($account) {
+	Route::get('domain', 'SuperController@index');
+	Route::post('domain/create', 'SuperController@create');
 });
 
 /*
