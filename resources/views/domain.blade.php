@@ -11,7 +11,7 @@
 <body>
 
 <div class="container">
-  <h2>Craete Domain</h2>
+  <h2>Create Domain</h2>
   {!! Form::open(array('url' => 'super/domain/create')) !!}
   
     @if(Session::has('message'))

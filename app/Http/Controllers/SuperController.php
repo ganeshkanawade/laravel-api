@@ -47,17 +47,21 @@ class SuperController extends Controller
             Config::set('database.connections.newdomain.password', $request->password );
             Config::set('database.connections.newdomain.prefix', $request->prefix );
             
-            $statsu = \Artisan::call('migrate', [
+            $status = \Artisan::call('migrate', [
             '--force' => true,
             '--database' => 'newdomain',
             ]);
-            
+            return \Redirect::to('super/domain')->with('message', 'Your domain has been created!');
+        }
+        else
+        {
+            return \Redirect::to('super/domain')->with('message', 'Error while creating domain!');;
         }
         
         
         
         
         
-        return \Redirect::to('super/domain')->with('message', 'Your domain has been created!');;
+        
     }
 }
