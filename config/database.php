@@ -80,9 +80,9 @@ return [
         
         'newdomain' => [
             'driver'    => 'mysql',
-            'host'      => 'locahost',
-            'database'  => 'nashik',
-            'username'  => 'root',
+            'host'      => '',
+            'database'  => '',
+            'username'  => '',
             'password'  => '',
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',

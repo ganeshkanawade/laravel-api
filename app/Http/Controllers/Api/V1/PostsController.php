@@ -38,7 +38,7 @@ class PostsController extends Controller
                             $query->select('id','name');
                         })
                     )->select('id', 'title','post', 'user_id')->paginate($limit); 
- 
+
             $posts->appends(array(
                 'search' => $search_term,
                 'limit' => $limit
@@ -99,14 +99,14 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($domain,$id)
     {
         $post = Post::with(
             array('User'=>function($query){
                 $query->select('id','name');
             })
             )->find($id);
-        
+
         if(!$post){
             return Response::json([
                 'error' => [
@@ -135,7 +135,7 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $domain,$id)
     {
         if(! $request->title or ! $request->post or !$request->user_id){
             return Response::json([
@@ -144,7 +144,7 @@ class PostsController extends Controller
                 ]
             ], 422);
         }
-        
+
         $post = Post::find($id);
         $post->title = $request->title;
         $post->post = $request->post;
@@ -162,7 +162,7 @@ class PostsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($domain,$id)
     {
         $result =  Post::destroy($id);
         return Response::json([

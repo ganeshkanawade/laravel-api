@@ -47,10 +47,24 @@ class SuperController extends Controller
             Config::set('database.connections.newdomain.password', $request->password );
             Config::set('database.connections.newdomain.prefix', $request->prefix );
             
-            $status = \Artisan::call('migrate', [
+            $status = \Artisan::call('migrate:refresh', [
             '--force' => true,
             '--database' => 'newdomain',
+//            '--seed'=>true
             ]);
+
+            Config::set('database.connections.subdomain.host', $request->host );
+            Config::set('database.connections.subdomain.database', $request->dbname );
+            Config::set('database.connections.subdomain.username', $request->username );
+            Config::set('database.connections.subdomain.password', $request->password );
+            Config::set('database.connections.subdomain.prefix', $request->prefix );
+
+            $status = \Artisan::call('db:seed', [
+                '--force' => true,
+                '--database' => 'subdomain',
+//            '--seed'=>true
+            ]);
+
             return \Redirect::to('super/domain')->with('message', 'Your domain has been created!');
         }
         else
