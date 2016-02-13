@@ -37,7 +37,7 @@ class SuperController extends Controller
         
         $created = $domain->save();
         
-        $result = DB::statement("create database {$request->prefix}{$request->dbname}");
+        $result = DB::statement("create database {$request->dbname}");
         
         if($created && $result)
         {
