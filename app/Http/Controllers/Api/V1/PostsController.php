@@ -11,14 +11,20 @@ use Response;
 use App\User;
 use Input;
 use JWTAuth;
+use App\Repositories\PostRepository;
 
 class PostsController extends Controller
 {
-    
-    public function __construct(){
+
+    protected  $posts;
+
+
+    public function __construct(PostRepository $posts){
         
         $this->middleware('jwt.auth');
         //$this->middleware('api.jwt', ['only' => ['index']]);
+
+        $this->posts = $posts;
     }
 
     /**
@@ -193,5 +199,16 @@ class PostsController extends Controller
                'post' => $joke['post'],
                'create_by' => $joke['user']['name']
             ];
+    }
+
+    /**
+     *
+     * Get User Posts
+     *
+     */
+    function  getUserPosts(Request $request)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        return $this->posts->userPosts($user);
     }
 }
